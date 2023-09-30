@@ -5,6 +5,7 @@
 
 using namespace std;
 
+/// cleanup(s) takes a string representing a number and returns a string representing the same number without leading zeros.
 string cleanup(string s)
 {
     int i = 0;
