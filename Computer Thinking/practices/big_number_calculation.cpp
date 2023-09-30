@@ -1,10 +1,32 @@
 #include <iostream>
 #include <string>
+#include <chrono>
+#define BENCHMARK_COUNT 10000
+
 using namespace std;
 
-/// add(a, b) takes two strings representing numbers and returns a string representing the sum of the two numbers. For example, add("123", "456") returns
+string cleanup(string s)
+{
+    int i = 0;
+    while (s[i] == '0' && i < s.length() - 1)
+    {
+        i++;
+    }
+    return s.substr(i);
+}
+
+/// add(a, b) takes two strings representing numbers and returns a string representing the sum of the two numbers.
 string add(string a, string b)
 {
+    /// Remove the leading zeros
+    a = cleanup(a);
+    b = cleanup(b);
+
+    if (a == "0")
+        return b;
+    if (b == "0")
+        return a;
+
     int a_len = a.length(),
         b_len = b.length(),
         max_len = a_len > b_len ? a_len : b_len,
@@ -73,15 +95,23 @@ string add(string a, string b)
     return result;
 }
 
+/// multiply(a, b) takes two strings representing numbers and returns a string representing the product of the two numbers.
 string multiply(string a, string b)
 {
+    /// Remove the leading zeros
+    a = cleanup(a);
+    b = cleanup(b);
+
+    if (a == "0" || b == "0")
+        return "0";
+
     int a_len = a.length(),
         b_len = b.length(),
         max_len = a_len > b_len ? a_len : b_len,
         min_len = a_len < b_len ? a_len : b_len,
         len_diff = abs(a_len - b_len);
     bool a_is_longer = max_len == a_len;
-    
+
     for (int i = 0; i < a_len; i++)
     {
         a[i] = a[i] - '0';
@@ -109,7 +139,7 @@ string multiply(string a, string b)
         }
 
         string tmp_result = "";
-        for(int j=0; j < max_len; j++) 
+        for (int j = 0; j < max_len; j++)
         {
             /// get the current digit of the larger number
             if (a_is_longer)
@@ -136,7 +166,7 @@ string multiply(string a, string b)
         {
             zeros += "0";
         }
-        
+
         result = add(result, tmp_result + zeros);
     }
 
@@ -145,9 +175,27 @@ string multiply(string a, string b)
 
 int main()
 {
-    string a, b;
-    cin >> a >> b;
+    long long ms1 = 0, ms2 = 0;
+    for (int i = 0; i < BENCHMARK_COUNT; i++)
+    {
+        string a, b;
 
-    cout << add(a, b) << endl;
-    cout << multiply(a, b) << endl;
+        /// Generate two unsigned int numbers in int range
+        a = to_string(rand());
+        b = to_string(rand());
+
+        auto start1 = chrono::high_resolution_clock::now();
+        add(a, b);
+        auto stop1 = chrono::high_resolution_clock::now();
+        ms1 += chrono::duration_cast<chrono::microseconds>(stop1 - start1).count();
+        auto start2 = chrono::high_resolution_clock::now();
+        multiply(a, b);
+        auto stop2 = chrono::high_resolution_clock::now();
+        ms2 += chrono::duration_cast<chrono::microseconds>(stop2 - start2).count();
+    }
+
+    ms1 /= BENCHMARK_COUNT;
+    ms2 /= BENCHMARK_COUNT;
+    cout << "Add complete in " << (ms1) << "ms" << endl;
+    cout << "Multiply complete in " << (ms2) << "ms" << endl;
 }
