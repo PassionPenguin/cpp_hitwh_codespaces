@@ -2,7 +2,7 @@
 #include <string>
 using namespace std;
 
-///add(a, b) takes two strings representing numbers and returns a string representing the sum of the two numbers. For example, add("123", "456") returns
+/// add(a, b) takes two strings representing numbers and returns a string representing the sum of the two numbers. For example, add("123", "456") returns
 string add(string a, string b)
 {
     int a_len = a.length(),
@@ -10,8 +10,6 @@ string add(string a, string b)
         max_len = a_len > b_len ? a_len : b_len,
         len_diff = abs(a_len - b_len);
     bool a_is_longer = max_len == a_len;
-
-    cout << a_len << " " << b_len << " " << max_len << " " << len_diff << endl;
 
     for (int i = 0; i < a_len; i++)
     {
@@ -23,7 +21,6 @@ string add(string a, string b)
     }
 
     /// Store the carry num
-    /// 存储进位
     int carry = 0;
     string result = "";
 
@@ -39,7 +36,8 @@ string add(string a, string b)
             if (i > b_len)
             {
                 b_digit = 0;
-            } else
+            }
+            else
             {
                 b_digit = b[b_len - i - 1];
             }
@@ -50,7 +48,8 @@ string add(string a, string b)
             if (i > a_len)
             {
                 a_digit = 0;
-            } else
+            }
+            else
             {
                 a_digit = a[a_len - i - 1];
             }
